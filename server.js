@@ -23,6 +23,7 @@ global.appRoot = path.resolve("./");
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
 app.use('/api', routes);
 app.use('/uploads', express.static('uploads'));
 app.use('/', (req, res) => {
@@ -32,7 +33,7 @@ app.use('/', (req, res) => {
   Or You may reach out to me for any question related to this Apis: codersgyan@gmail.com
   `);
 });
-
+// retrieveRates();
 app.use(errorHandler);
 const PORT = process.env.PORT || APP_PORT;
 app.listen(PORT, () => console.log(`Listening on port ${PORT}.`));

@@ -1,4 +1,5 @@
 import { Shipping } from '../models/index.js';
+import Easypost from "@easypost/api"
 import CustomErrorHandler from '../services/CustomErrorHandler.js';
 import axios from 'axios';
 
@@ -58,78 +59,56 @@ const shippingController = {
         }
         return res.json(document);
     },
+
     async shippingRate(req, res) {
+        const api = new Easypost("EZTK4d90317c82684615b17ae2d38ba3f34dLuRIWaCNIusd68mHk43qLA");
         const { recipient, packages, sender, addons } = req.body;
         const { postal_code: recieverPostal, country: reveiverCountry, } = recipient
-        const { country: senderCountry, } = sender
-        const requestedPackageLineItems = packages.map(p => {
-            return {
-                weight: {
-                    units: "LB",
-                    value: p.box.weight
-                },
-                dimensions: {
-                    length: p.box.length,
-                    width: p.box.width,
-                    height: p.box.height,
-                    units: "IN"
-                }
-            };
-        });
-        const shippingData = {
-            "accountNumber": {
-                "value": "740561073"
-            },
-            "requestedShipment": {
-                "shipper": {
-                    "address": {
-                        "postalCode": "569933",
-                        "countryCode": senderCountry
-                    }
-                },
-                "recipient": {
-                    "address": {
-                        "postalCode": recieverPostal,
-                        "countryCode": reveiverCountry
-                    }
-                },
-                "pickupType": "DROPOFF_AT_FEDEX_LOCATION",
-                "rateRequestType": [
-                    "LIST",
-                    "ACCOUNT"
-                ],
-                "requestedPackageLineItems": requestedPackageLineItems
-            }
-        }
-        try {
-            const authResponse = await axios.post("https://apis-sandbox.fedex.com/oauth/token", {
-                'grant_type': 'client_credentials',
-                'client_id': 'l70f3e6df0762e4c41a434757ed1199041',
-                'client_secret': '82b381fbe43c4c09ae1ca05db25eb5f3'
-            },
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                });
+        const { weight, length, width, height } = packages[0].box
+        // console.log(typeof(weight))
 
-            const accessToken = authResponse.data.access_token;
-            console.log("Access", accessToken)
-            const rateResponse = await axios.post("https://apis-sandbox.fedex.com/rate/v1/rates/quotes",
-                shippingData,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                    }
-                }
-            );
-            const shippingRate = rateResponse.data.output.rateReplyDetails[0].ratedShipmentDetails[0].totalNetFedExCharge;
-            res.json({ shippingRate });
-        } catch (error) {
-            console.log(error);
-            res.json(error)
-        }
+        const { country: senderCountry, } = sender
+        const shipment = new api.Shipment({
+            to_address: {
+                name: 'Dr. Steve Brule',
+                street1: '179 N Harbor Dr',
+                city: 'Redondo Beach',
+                state: 'CA',
+                zip: recieverPostal,
+                country: reveiverCountry,
+                email: 'dr_steve_brule@gmail.com',
+                phone: '4155559999',
+            },
+            from_address: {
+                street1: '417 montgomery street',
+                street2: 'FL 5',
+                zip: '408571',
+                country: 'SG',
+                company: 'EasyPost',
+                phone: '415-123-4567',
+            },
+            parcel: {
+                // length: length,
+                // width: width,
+                // height: height,
+                weight: +weight,
+            },
+            carrier_id: "ca_084f492327304c4792f28f7dd04b7a81"
+
+        });
+
+        shipment.save().then(s=>res.json(+s.rates[0].list_rate)).catch(err => console.log(err))
+
     }
 };
+
+//     );
+// const shippingRate = rateResponse.data.output.rateReplyDetails[0].ratedShipmentDetails[0].totalNetFedExCharge;
+//     res.json({ shippingRate });
+// } catch(error) {
+//     // console.error(error);
+//     res.status(500).json(error)
+// }
+
 
 export default shippingController;
