@@ -63,6 +63,7 @@ const shippingController = {
     async shippingRate(req, res) {
         const api = new Easypost("EZTK4d90317c82684615b17ae2d38ba3f34dLuRIWaCNIusd68mHk43qLA");
         const { recipient, packages, sender, addons } = req.body;
+
         const { postal_code: recieverPostal, country: reveiverCountry, } = recipient
         const { weight, length, width, height } = packages[0].box
         // console.log(typeof(weight))
@@ -88,16 +89,16 @@ const shippingController = {
                 phone: '415-123-4567',
             },
             parcel: {
-                // length: length,
-                // width: width,
-                // height: height,
                 weight: +weight,
+                length: +length,
+                width: +width,
+                height: +height,
             },
             carrier_id: "ca_084f492327304c4792f28f7dd04b7a81"
 
         });
 
-        shipment.save().then(s=>res.json(+s.rates[0].list_rate)).catch(err => console.log(err))
+        shipment.save().then(s => res.json(console.log("server", s))).catch(err => console.log(err))
 
     }
 };
