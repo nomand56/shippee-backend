@@ -1,0 +1,39 @@
+{
+  "files": {
+    "main.css": "/static/css/main.42c7c9d5.css",
+    "main.js": "/static/js/main.08216211.js",
+    "static/media/packing1.gif": "/static/media/packing1.2ab7ba59378e18ab80a7.gif",
+    "static/media/packing2.gif": "/static/media/packing2.df0573416417a4665fd9.gif",
+    "static/media/Price3.png": "/static/media/Price3.b74e16530ff996fe1418.png",
+    "static/media/Price.png": "/static/media/Price.65195280630ebdf053c0.png",
+    "static/media/Price2.png": "/static/media/Price2.cd1e475a97b9315eaa93.png",
+    "static/media/tax_bg.webp": "/static/media/tax_bg.275a7419dba0e26ec6b7.webp",
+    "static/media/Keep Calm Insurance.png": "/static/media/Keep Calm Insurance.0c2f80e558fb06a44d4d.png",
+    "static/media/GetStart.png": "/static/media/GetStart.a8c90687bcac4023fb4c.png",
+    "static/media/packing3.webp": "/static/media/packing3.b52c3d8065c991ce9f19.webp",
+    "static/media/montserrat-all-400-normal.woff": "/static/media/montserrat-all-400-normal.327fab0afc997a2d9b16.woff",
+    "static/media/3x3x3.png": "/static/media/3x3x3.30662163c917e1a75a17.png",
+    "static/media/Real Time Parcel Tracking.png": "/static/media/Real Time Parcel Tracking.d9f880f5f434edadb40b.png",
+    "static/media/logo.png": "/static/media/logo.095508b716cdc392cd3f.png",
+    "static/media/Custom Packing.png": "/static/media/Custom Packing.910a701867a6b5e8e204.png",
+    "static/media/Ask Me Anything.png": "/static/media/Ask Me Anything.d6a26236ef8659f9f6f5.png",
+    "static/media/Tax Ray Vision.png": "/static/media/Tax Ray Vision.da9cb8fd8b8990d5986e.png",
+    "static/media/Expert Review.png": "/static/media/Expert Review.98f5794e2420d0125a44.png",
+    "static/media/Precision Pick Up.png": "/static/media/Precision Pick Up.77e7c1bda8d9c46e7d33.png",
+    "static/media/Green Shipping.png": "/static/media/Green Shipping.80997751da1447b226ef.png",
+    "static/media/google-rating.png": "/static/media/google-rating.563486831aa680fdd8bc.png",
+    "static/media/montserrat-latin-400-normal.woff2": "/static/media/montserrat-latin-400-normal.acb6629fe45c43ad5d8b.woff2",
+    "static/media/montserrat-latin-ext-400-normal.woff2": "/static/media/montserrat-latin-ext-400-normal.0204ec08a4b574088f02.woff2",
+    "static/media/montserrat-cyrillic-ext-400-normal.woff2": "/static/media/montserrat-cyrillic-ext-400-normal.bbf9e820a2563aac0d8b.woff2",
+    "static/media/montserrat-cyrillic-400-normal.woff2": "/static/media/montserrat-cyrillic-400-normal.e5c5c19c23e370a342c8.woff2",
+    "static/media/montserrat-vietnamese-400-normal.woff2": "/static/media/montserrat-vietnamese-400-normal.8f3f4c99eb0eeb5990f1.woff2",
+    "static/media/track_icon.svg": "/static/media/track_icon.847182b07ee616af836e.svg",
+    "index.html": "/index.html",
+    "main.42c7c9d5.css.map": "/static/css/main.42c7c9d5.css.map",
+    "main.08216211.js.map": "/static/js/main.08216211.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.42c7c9d5.css",
+    "static/js/main.08216211.js"
+  ]
+}

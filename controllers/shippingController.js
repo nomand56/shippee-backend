@@ -61,45 +61,82 @@ const shippingController = {
     },
 
     async shippingRate(req, res) {
-        const api = new Easypost("EZTK4d90317c82684615b17ae2d38ba3f34dLuRIWaCNIusd68mHk43qLA");
         const { recipient, packages, sender, addons } = req.body;
-
         const { postal_code: recieverPostal, country: reveiverCountry, } = recipient
-        const { weight, length, width, height } = packages[0].box
-        // console.log(typeof(weight))
 
         const { country: senderCountry, } = sender
-        const shipment = new api.Shipment({
-            to_address: {
-                name: 'Dr. Steve Brule',
-                street1: '179 N Harbor Dr',
-                city: 'Redondo Beach',
-                state: 'CA',
-                zip: recieverPostal,
-                country: reveiverCountry,
-                email: 'dr_steve_brule@gmail.com',
-                phone: '4155559999',
-            },
-            from_address: {
-                street1: '417 montgomery street',
-                street2: 'FL 5',
-                zip: '408571',
-                country: 'SG',
-                company: 'EasyPost',
-                phone: '415-123-4567',
-            },
-            parcel: {
-                weight: +weight,
-                length: +length,
-                width: +width,
-                height: +height,
-            },
-            carrier_id: "ca_084f492327304c4792f28f7dd04b7a81"
-
+        // console.log("ac", packages)
+        const requestedPackageLineItems = packages.map(p => {
+            return {
+                weight: {
+                    units: "LB",
+                    value: +p.box.weight
+                },
+                dimensions: {
+                    length: +p.box.length,
+                    width: +p.box.width,
+                    height: +p.box.height,
+                    units: "IN"
+                }
+            };
         });
+        // console.log("items", requestedPackageLineItems)
+        // console.log("sender", sender)
+        // console.log("receiver", recipient)
+        const shippingData = {
+            "accountNumber": {
+                "value": "121059770"
+            },
+            "requestedShipment": {
+                "shipper": {
+                    "address": {
+                        "postalCode": "569933",
+                        "countryCode": senderCountry
+                    }
+                },
+                "recipient": {
+                    "address": {
+                        "postalCode": recieverPostal,
+                        "countryCode": reveiverCountry
+                    }
+                },
+                "pickupType": "DROPOFF_AT_FEDEX_LOCATION",
+                "rateRequestType": [
+                    "LIST",
+                    "ACCOUNT"
+                ],
+                "requestedPackageLineItems": requestedPackageLineItems
+            }
+        }
+        try {
+            const authResponse = await axios.post("https://apis.fedex.com/oauth/token", {
+                'grant_type': 'client_credentials',
+                'client_id': 'l705f47025631443e39c111c0956a335c5',
+                'client_secret': '3ae0c814-6b79-46e3-b9d6-e7849ef09ef7'
+            },
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
 
-        shipment.save().then(s => res.json(console.log("server", s))).catch(err => console.log(err))
+            const accessToken = authResponse.data.access_token;
 
+            const rateResponse = await axios.post("https://apis.fedex.com/rate/v1/rates/quotes",
+                shippingData,
+                {
+                    headers: {
+                        'Authorization': `Bearer ${accessToken}`,
+                    }
+                }
+            );
+           
+            const shippingRate = rateResponse.data.output.rateReplyDetails[0].ratedShipmentDetails[0].totalNetFedExCharge;
+            res.json({ shippingRate });
+        } catch (error) {
+            console.error(error);
+            res.status(500).json(error)
+        }
     }
 };
 
