@@ -130,7 +130,7 @@ const shippingController = {
                     }
                 }
             );
-           
+
             const shippingRate = rateResponse.data.output.rateReplyDetails[0].ratedShipmentDetails[0].totalNetFedExCharge;
             res.json({ shippingRate });
         } catch (error) {
