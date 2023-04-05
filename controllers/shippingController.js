@@ -5,8 +5,7 @@ import axios from 'axios';
 
 const shippingController = {
     async store(req, res, next) {
-        const { sender, recipient, addons } = req.body;
-
+        const { sender, recipient, addons, date } = req.body;
         let document;
         try {
             document = await Shipping.create({
@@ -61,11 +60,10 @@ const shippingController = {
     },
 
     async shippingRate(req, res) {
-        const { recipient, packages, sender, addons } = req.body;
+        const { recipient, packages, sender, addons, date } = req.body;
         const { postal_code: recieverPostal, country: reveiverCountry, } = recipient
 
         const { country: senderCountry, } = sender
-        // console.log("ac", packages)
         const requestedPackageLineItems = packages.map(p => {
             return {
                 weight: {
@@ -80,9 +78,6 @@ const shippingController = {
                 }
             };
         });
-        // console.log("items", requestedPackageLineItems)
-        // console.log("sender", sender)
-        // console.log("receiver", recipient)
         const shippingData = {
             "accountNumber": {
                 "value": "121059770"
@@ -101,6 +96,7 @@ const shippingController = {
                     }
                 },
                 "pickupType": "DROPOFF_AT_FEDEX_LOCATION",
+                "shipDateStamp": date,
                 "rateRequestType": [
                     "LIST",
                     "ACCOUNT"
@@ -121,7 +117,7 @@ const shippingController = {
                 });
 
             const accessToken = authResponse.data.access_token;
-
+            console.log("Access", accessToken)
             const rateResponse = await axios.post("https://apis.fedex.com/rate/v1/rates/quotes",
                 shippingData,
                 {
@@ -130,7 +126,6 @@ const shippingController = {
                     }
                 }
             );
-
             const shippingRate = rateResponse.data.output.rateReplyDetails[0].ratedShipmentDetails[0].totalNetFedExCharge;
             res.json({ shippingRate });
         } catch (error) {
@@ -141,7 +136,7 @@ const shippingController = {
 };
 
 //     );
-// const shippingRate = rateResponse.data.output.rateReplyDetails[0].ratedShipmentDetails[0].totalNetFedExCharge;
+// 
 //     res.json({ shippingRate });
 // } catch(error) {
 //     // console.error(error);
